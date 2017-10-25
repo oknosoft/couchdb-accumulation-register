@@ -16,4 +16,23 @@
 | Январь | 10 | 1 | 2 | 9 |
 | Февраль | 9 | 3 | 5 | 7 |
 
+### Как это работает
+Результат виртуальной таблицы складывается из нескольких источников:
+- Map/reduce view с ключем вида {год, месяц, день, измерение1, измерениеN...} и ресуросм, накапливающим обороты по этому ключу (см. [пример design-документа]())
+- Предварительно рассчитанных на конец каждого месяца итогов. Таблицы итогов и маркер их актуальности - вспомогательный механизм. Если итоги не рассчитаны или неактуальны, система сформирует такой же в точности ответ, но потратит на его вычисление брльше времени. Подробнее про пересчет итогов см. [здесь]()
+- Функции виртуальных таблиц принимают на вход селектор, близкий по синтаксису к mango-селектору couchdb. Данные остатков и оборотов фильтруются по описанным в селекторе правилам
+- Финальные вычисления делаются в ОЗУ, где к начальным остаткам подклеиваются обороты за период, рассчитываются итоги запрошенных группировок
 
+### HTTP API
+Библиотека добавляет в API базы couchdb следующие endpoints:
+- `POST /{db}/_totals/{view}`, где `view` - имя design-документа для расчета оборотов
+- `POST /{db}/_turnovers/{view}`, где `view` - имя design-документа для расчета оборотов
+- `POST /{db}/_totals_turnovers/{view}`, где `view` - имя design-документа для расчета оборотов
+
+В теле запроса следует передать JSON-объект следующей структуры:
+- selector (json) – JSON object describing criteria used to select documents. More information provided in the section on selector syntax. Required
+- limit (number) – Maximum number of results returned. Default is 25. Optional
+- skip (number) – Skip the first ‘n’ results, where ‘n’ is the value specified. Optional
+- sort (array) – JSON array following sort syntax. Optional
+- fields (array) – JSON array specifying which fields of each object should be 
+- periodicity (enum) - периодичночть разворота итогов (для таблиц оборотов и остатков с оборотами)

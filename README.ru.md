@@ -36,3 +36,9 @@
 - sort (array) – JSON array following sort syntax. Optional
 - fields (array) – JSON array specifying which fields of each object should be 
 - periodicity (enum) - периодичночть разворота итогов (для таблиц оборотов и остатков с оборотами)
+
+### JS API
+Библиотека добавляет в прототип класса database pouchdb следующие методы:
+- `totals`, todo описать
+- `turnovers`, todo описать
+- `totals_turnovers`, todo описать

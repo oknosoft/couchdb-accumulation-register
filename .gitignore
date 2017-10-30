@@ -1,0 +1,17 @@
+.DS_Store
+
+# Editor files
+.idea
+.vscode
+
+# Exclude compiled files
+build/
+lib/
+localstorage/
+tmp/
+
+
+# npm files
+node_modules
+package-lock.json
+*.log
